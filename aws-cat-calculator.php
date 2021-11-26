@@ -69,3 +69,16 @@ while($line = fgetcsv($fileHandle))
 }
 
 print_r($totals);
+
+foreach($totals as $customer => $total)
+{
+    if($customer == '')
+    {
+        printf("Total internal usage: ");
+    }
+    else
+    {
+        printf("Total usage for %s: ", $customer);
+    }
+    printf("$%f\r\n", $total);
+}
