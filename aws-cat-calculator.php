@@ -4,8 +4,9 @@ const EXIT_SUCCESS = 0;
 const EXIT_FAILURE = 1;
 
 $file = null;
+$filterBuyInvoiceNo = null;
 
-foreach(getopt("f:h") as $option => $argument)
+foreach(getopt("f:hi:") as $option => $argument)
 {
     switch($option)
     {
@@ -16,8 +17,13 @@ foreach(getopt("f:h") as $option => $argument)
         case 'h':
             fprintf(STDERR, "Usage: php aws-cat-calculator.php [options]\r\n" .
                 "  -f  Read CAT report from this file (required)\r\n" .
-                "  -h  Display this help.\r\n");
+                "  -h  Display this help\r\n" .
+                "  -i  Filter by this invoice number\r\n");
             exit(EXIT_SUCCESS);
+
+        case 'i':
+            $filterBuyInvoiceNo = $argument;
+            break;
     }
 }
 
@@ -38,8 +44,14 @@ if($topLine != "\"Don't see your tags in the report? New tags are excluded by de
 $headers = fgetcsv($fileHandle);
 $totalCostPosition = array_search("TotalCost", $headers);
 $userCustomerPosition = array_search("user:Customer", $headers);
+$invoiceIdPosition = array_search("InvoiceID", $headers);
+$recordTypePosition = array_search("RecordType", $headers);
 
-if(!$totalCostPosition || !$userCustomerPosition)
+if(!is_int($totalCostPosition)
+    || !is_int($userCustomerPosition)
+    || !is_int($recordTypePosition)
+    || ($filterBuyInvoiceNo && !is_int($invoiceIdPosition))
+)
 {
     fprintf(STDERR, "Missing required headers\r\n");
     exit(EXIT_FAILURE);
@@ -49,7 +61,11 @@ $totals = array();
 
 while($line = fgetcsv($fileHandle))
 {
-    @$totals[$line[$userCustomerPosition]] += $line[$totalCostPosition];
+    if($line[$recordTypePosition] == "PayerLineItem" &&
+        (!$filterBuyInvoiceNo || ($line[$invoiceIdPosition] == $filterBuyInvoiceNo)))
+    {
+        @$totals[$line[$userCustomerPosition]] += $line[$totalCostPosition];
+    }
 }
 
 print_r($totals);
