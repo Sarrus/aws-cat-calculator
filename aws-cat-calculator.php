@@ -5,24 +5,36 @@ const EXIT_FAILURE = 1;
 
 $file = null;
 $filterBuyInvoiceNo = null;
+$localCurrencyTotal = null;
+$localCurrencySymbol = null;
 
-foreach(getopt("f:hi:") as $option => $argument)
+foreach(getopt("c:f:hi:s:") as $option => $argument)
 {
     switch($option)
     {
+        case 'c':
+            $localCurrencyTotal = (float)$argument;
+            break;
+
         case 'f':
             $file = $argument;
             break;
 
         case 'h':
             fprintf(STDERR, "Usage: php aws-cat-calculator.php [options]\r\n" .
+                "  -c  Convert to local currency (must specify the bill total in local currency)" .
                 "  -f  Read CAT report from this file (required)\r\n" .
                 "  -h  Display this help\r\n" .
-                "  -i  Filter by this invoice number\r\n");
+                "  -i  Filter by this invoice number\r\n" .
+                "  -s  Local currency symbol");
             exit(EXIT_SUCCESS);
 
         case 'i':
             $filterBuyInvoiceNo = $argument;
+            break;
+
+        case 's':
+            $localCurrencySymbol = $argument;
             break;
     }
 }
@@ -68,7 +80,7 @@ while($line = fgetcsv($fileHandle))
     }
 }
 
-print_r($totals);
+$grandTotal = array_sum($totals);
 
 foreach($totals as $customer => $total)
 {
@@ -80,5 +92,20 @@ foreach($totals as $customer => $total)
     {
         printf("Total usage for %s: ", $customer);
     }
-    printf("$%f\r\n", $total);
+
+    $proportionOfTotal = $total / $grandTotal;
+
+    printf("$%.2f, Percentage of total: %.0f%% ", $total, $proportionOfTotal * 100);
+
+    if($localCurrencyTotal)
+    {
+        printf("In local currency: ");
+        if($localCurrencySymbol)
+        {
+            printf("%s", $localCurrencySymbol);
+        }
+        printf("%.2f", $localCurrencyTotal * $proportionOfTotal);
+    }
+
+    printf("\r\n");
 }
