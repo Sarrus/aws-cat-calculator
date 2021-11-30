@@ -115,3 +115,5 @@ foreach($totals as $customer => $total)
 
     printf("\r\n");
 }
+
+printf("Grand total: $%.2f\r\n", $grandTotal);
