@@ -50,7 +50,7 @@ Once a new Cost Allocation Report has been generated, download it from S3 and ru
 It will output the total usage cost for each customer. Any resource that was not tagged to a customer is 
 counted as internal usage:
 
-    <span style="color:red">Warning: Invoice number (option -i) not specified. Output may include non-usage charges such as EC2 reservations.</span>
+    Warning: Invoice number (option -i) not specified. Output may include non-usage charges such as EC2 reservations.
     Total internal usage: $221.88, Percentage of total: 56%
     Total usage for Aarons-Ardvarks: $0.00, Percentage of total: 0%
     Total usage for Bills-Bikes: $5.52, Percentage of total: 1%
