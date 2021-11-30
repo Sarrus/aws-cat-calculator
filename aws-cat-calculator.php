@@ -39,9 +39,15 @@ foreach(getopt("c:f:hi:s:") as $option => $argument)
     }
 }
 
+if(!$filterBuyInvoiceNo)
+{
+    fprintf(STDERR, "Warning: Invoice number (option -i) not specified. " .
+        "Output may include non-usage charges such as EC2 reservations.\r\n");
+}
+
 if(!$file)
 {
-    fprintf(STDERR, "File is required.");
+    fprintf(STDERR, "File is required.\r\n");
     exit(EXIT_FAILURE);
 }
 
