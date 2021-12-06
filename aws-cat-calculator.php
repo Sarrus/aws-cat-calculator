@@ -22,7 +22,7 @@ foreach(getopt("c:f:hi:s:") as $option => $argument)
 
         case 'h':
             fprintf(STDERR, "Usage: php aws-cat-calculator.php [options]\r\n" .
-                "  -c  Convert to local currency (must specify the bill total in local currency)" .
+                "  -c  Convert to local currency (must specify the bill total in local currency)\r\n" .
                 "  -f  Read CAT report from this file (required)\r\n" .
                 "  -h  Display this help\r\n" .
                 "  -i  Filter by this invoice number\r\n" .
