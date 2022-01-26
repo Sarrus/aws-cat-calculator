@@ -38,7 +38,8 @@ tag. AWS will not allow the tag to be enabled until it has been assigned to reso
 The full options for the script can be displayed using the -h flag:
 
     Usage: php aws-cat-calculator.php [options]
-    -c  Convert to local currency (must specify the bill total in local currency)  -f  Read CAT report from this file (required)
+    -c  Convert to local currency (must specify the bill total in local currency)  
+    -f  Read CAT report from this file (required)
     -h  Display this help
     -i  Filter by this invoice number
     -s  Local currency symbol
