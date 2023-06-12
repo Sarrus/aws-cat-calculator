@@ -81,4 +81,9 @@ The conversion to local currency will be appended to the output:
     Total usage for Charlies-Choppers: $121.50, Percentage of total: 35% In local currency: §43.04
     Total usage for Daves-Diamonds: $45.07, Percentage of total: 13% In local currency: §15.96
     Total usage for Emmas-Explosives: $1.36, Percentage of total: 0% In local currency: §0.48
-    Grand total: $348.53
+    Grand total: $348.53, Local currency rounding error: §+0.01
+
+Occasionally, a rounding error can occur when calculating the local currency totals. This happens when the sum 
+of the outputted local currency values mismatches with the provided local currency total. To make this clear
+the rounding error is displayed next to the grand total. In this case, §0.01 was leftover after calculating 
+the total shares.

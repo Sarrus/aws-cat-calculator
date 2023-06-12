@@ -7,13 +7,14 @@ $file = null;
 $filterBuyInvoiceNo = null;
 $localCurrencyTotal = null;
 $localCurrencySymbol = null;
+$localCurrentyRemainder = null;
 
 foreach(getopt("c:f:hi:s:") as $option => $argument)
 {
     switch($option)
     {
         case 'c':
-            $localCurrencyTotal = (float)$argument;
+            $localCurrencyTotal = $localCurrencyRemainder = (float)$argument;
             break;
 
         case 'f':
@@ -105,15 +106,30 @@ foreach($totals as $customer => $total)
 
     if($localCurrencyTotal)
     {
+        $rounded = round($localCurrencyTotal * $proportionOfTotal, 2);
+        $localCurrencyRemainder -= $rounded;
+
         printf("In local currency: ");
         if($localCurrencySymbol)
         {
             printf("%s", $localCurrencySymbol);
         }
-        printf("%.2f", $localCurrencyTotal * $proportionOfTotal);
+        printf("%.2f", $rounded);
     }
 
     printf("\r\n");
 }
 
-printf("Grand total: $%.2f\r\n", $grandTotal);
+printf("Grand total: $%.2f", $grandTotal);
+
+if($localCurrencyTotal)
+{
+	printf(", Local currency rounding error: ");
+        if($localCurrencySymbol)
+        {
+            printf("%s", $localCurrencySymbol);
+        }
+        printf("%c%+.2f", $localCurrencySymbol, $localCurrencyRemainder);
+}
+
+printf("\r\n");
